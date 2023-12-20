@@ -8,7 +8,8 @@ namespace Getri_FinalProject_MVC_API.AutoMapper
     {
         public AutoMapperProfile()
         {
-            CreateMap<CategoryDTO, Category>();            
+            CreateMap<CategoryDTO, Category>();
+            CreateMap<CategoryUpdateDTO, Category>();
         }
     }
 }

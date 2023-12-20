@@ -34,26 +34,26 @@ namespace Getri_FinalProject_MVC_API.APIController
         }
 
         [HttpPost("InsertCategory")]
-        public ActionResult CreateCategory([FromBody] CategoryDTO categoryDTO)
+        public ActionResult CreateCategory(CategoryDTO categoryDTO)
         {
             var category = mapper.Map<Category>(categoryDTO);
             categoryRepository.CreateCategory(category);
-            return Ok();
+            return Ok(category);
         }
 
         [HttpPut("EditCategory")]
-        public ActionResult UpdateCategory([FromBody] CategoryDTO categoryDTO)
+        public ActionResult UpdateCategory(CategoryUpdateDTO categoryUpdateDTO)
         {
-            var category = mapper.Map<Category>(categoryDTO);
+            var category = mapper.Map<Category>(categoryUpdateDTO);
             categoryRepository.UpdateCategory(category);
-            return Ok();
+            return Ok(category);
         }
 
         [HttpDelete("RemoveCategory")]
         public ActionResult DeleteCategory(int id)
         {
-            categoryRepository.DeleteCategory(id);
-            return Ok();
+            var category = categoryRepository.DeleteCategory(id);
+            return Ok(category);
         }
     }
 }
