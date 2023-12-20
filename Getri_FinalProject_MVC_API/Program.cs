@@ -1,5 +1,6 @@
 using DAL.EntityFramework;
 using Microsoft.EntityFrameworkCore;
+using Services.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,10 @@ builder.Services.AddDbContext<ApplicationDbContext>
     (options => options.UseSqlServer
     (builder.Configuration.GetConnectionString("ProjectConnection"),
     b => b.MigrationsAssembly("Getri_FinalProject_MVC_API")));
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
