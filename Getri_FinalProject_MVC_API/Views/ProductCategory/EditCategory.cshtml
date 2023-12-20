@@ -1,0 +1,17 @@
+﻿@model Getri_FinalProject_MVC_API.ViewModel.CategoryWithIdViewModel
+<form asp-action="EditCategory">
+	<div>
+		<div class="form-group">
+			<label asp-for="CategoryName"></label>
+			<input asp-for="CategoryName" class="form-control" />
+			<input asp-for="CategoryId" type="hidden" />
+		</div>
+		<br />
+
+		<div class="form-group">
+			<input type="submit" value="Edit" class="btn btn-primary" />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		</div>
+
+	</div>
+</form>
