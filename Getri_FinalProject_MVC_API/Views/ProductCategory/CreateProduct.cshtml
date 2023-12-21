@@ -1,0 +1,79 @@
+﻿@model Getri_FinalProject_MVC_API.ViewModel.ProductsViewModel
+
+<div>
+
+    <form asp-action="AddProducts">
+        <div>
+            <div class="form-group">
+
+                <select name="ProductCreateViewModel.CategoryId" asp-action="CategoryId" asp-for="ProductCreateViewModel.CategoryId" asp-items="@ViewBag.CategoryList"></select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ProductCreateViewModel.ProductName"></label>
+                <input asp-action="ProductName" asp-for="ProductCreateViewModel.ProductName" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ProductCreateViewModel.ProductDescription"></label>
+                <input asp-action="ProductDescription" asp-for="ProductCreateViewModel.ProductDescription" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ProductCreateViewModel.ProductPrice"></label>
+                <input asp-action="ProductPrice" asp-for="ProductCreateViewModel.ProductPrice" class="form-control" />
+            </div>
+            <br />
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a id="listParentModel" asp-action="Index"
+                   asp-route-id="LstProductCreateViewModel.ProductId" class="btn btn-danger">Index</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a id="createCategoryModel" asp-action="CreateCategory" class="btn btn-primary">
+                    Add Category
+                </a>
+
+
+
+                <input type="submit" value="AddProducts" class="btn btn-primary" />
+            </div>
+        </div>
+    </form>
+
+
+    <form asp-action="SubmitProducts">
+        <div>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.LstProductCreateViewModel)
+                    {
+                        <tr>
+                            <td>@item.ProductName</td>
+                            <td>@item.ProductDescription</td>
+                            <td>@item.ProductPrice.ToString()</td>
+                            <td style="display:none;">@item.CategoryId.ToString()</td>
+                            <td>@item.CategoryName.ToString()</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <input type="submit" value="Submit Product" class="btn btn-primary" />
+
+
+        </div>
+    </form>
+
+
+</div>

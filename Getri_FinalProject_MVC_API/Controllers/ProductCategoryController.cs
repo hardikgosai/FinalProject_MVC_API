@@ -1,5 +1,6 @@
 ﻿using Getri_FinalProject_MVC_API.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Services.Repository;
 
@@ -129,6 +130,103 @@ namespace Getri_FinalProject_MVC_API.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateProduct()
+        {
+            		List<CategoryWithIdViewModel> categoryLst = new List<CategoryWithIdViewModel>();
+            HttpResponseMessage response = await _client.GetAsync("api/Category/GetCategoryList");
+            if (response.IsSuccessStatusCode)
+            {
+				var result = response.Content.ReadAsStringAsync().Result;
+				categoryLst = JsonConvert.DeserializeObject<List<CategoryWithIdViewModel>>(result);
+			}
+
+            ViewBag.CategoryList = new SelectList(categoryLst, "CategoryId", "CategoryName");
+
+			ProductsViewModel objProductsViewModel = new ProductsViewModel();
+			
+			objProductsViewModel.ProductCreateViewModel = new ProductCreateViewModel(); ;
+			objProductsViewModel.LstProductCreateViewModel = new List<ProductCreateViewModel>();
+
+			return View(objProductsViewModel);
+        }
+
+        public async Task<IActionResult> AddProducts(ProductsViewModel model)
+        {
+			List<CategoryWithIdViewModel> categoryLst = new List<CategoryWithIdViewModel>();
+			HttpResponseMessage response = await _client.GetAsync("api/Category/GetCategoryList");
+			if (response.IsSuccessStatusCode)
+            {
+				var result = response.Content.ReadAsStringAsync().Result;
+				categoryLst = JsonConvert.DeserializeObject<List<CategoryWithIdViewModel>>(result);
+			}
+
+            ViewBag.CategoryList = new SelectList(categoryLst, "CategoryId", "CategoryName");
+
+            ProductsViewModel objProductsViewModel = new ProductsViewModel();
+            ProductCreateViewModel objProductCreateViewModel = new ProductCreateViewModel();
+            objProductCreateViewModel.CategoryId = model.ProductCreateViewModel.CategoryId;
+			objProductCreateViewModel.ProductId = model.ProductCreateViewModel.ProductId;
+            objProductCreateViewModel.ProductName = model.ProductCreateViewModel.ProductName;
+            objProductCreateViewModel.ProductDescription = model.ProductCreateViewModel.ProductDescription;
+            objProductCreateViewModel.ProductPrice = model.ProductCreateViewModel.ProductPrice;
+            objProductCreateViewModel.CategoryName = categoryLst.FirstOrDefault(x => x.CategoryId == model.ProductCreateViewModel.CategoryId).CategoryName;
+
+            List<ProductCreateViewModel> lstCreateViewModel = new List<ProductCreateViewModel>();
+            if(HttpContext.Session.GetString("lstData") != null)
+            {
+				var lstPrevious = JsonConvert.DeserializeObject<List<ProductCreateViewModel>>(HttpContext.Session.GetString("lstData"));
+
+                if(lstPrevious != null)
+                {
+                    lstCreateViewModel = lstPrevious;
+                }
+			}
+
+            lstCreateViewModel.Add(objProductCreateViewModel);
+            HttpContext.Session.SetString("lstData", JsonConvert.SerializeObject(lstCreateViewModel));
+
+            objProductsViewModel.ProductCreateViewModel = new ProductCreateViewModel();
+            objProductsViewModel.LstProductCreateViewModel = lstCreateViewModel;
+
+            return View("CreateProduct", objProductsViewModel);
+		}
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SubmitProducts()
+        {
+            if(HttpContext.Session.GetString("lstData") != null)
+            {
+                var lstPrevious = JsonConvert.DeserializeObject<List<ProductCreateViewModel>>(HttpContext.Session.GetString("lstData"));
+
+                if (lstPrevious != null)
+                {
+                    foreach (var product in lstPrevious)
+                    {
+                        ProductInsertViewModel objProductViewModel = new ProductInsertViewModel();
+                        objProductViewModel.ProductName = product.ProductName;
+                        objProductViewModel.ProductDescription = product.ProductDescription;
+                        objProductViewModel.ProductPrice = product.ProductPrice;
+                        objProductViewModel.CategoryId = product.CategoryId;
+
+                        var response = _client.PostAsJsonAsync("api/Product/InsertProduct", objProductViewModel).Result;
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                           // return RedirectToAction("Index");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, "Error while inserting product");
+                        }
+                    }
+                }
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

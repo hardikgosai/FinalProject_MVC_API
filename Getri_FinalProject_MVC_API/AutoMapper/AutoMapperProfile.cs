@@ -10,6 +10,7 @@ namespace Getri_FinalProject_MVC_API.AutoMapper
         {
             CreateMap<CategoryDTO, Category>();
             CreateMap<CategoryUpdateDTO, Category>();
+            CreateMap<ProductDTO, Product>();
         }
     }
 }

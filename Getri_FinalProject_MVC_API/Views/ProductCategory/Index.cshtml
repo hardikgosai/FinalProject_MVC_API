@@ -9,7 +9,10 @@
 			<a id="createCategoriesModal" asp-action="CreateCategory" class="btn btn-primary">
 				Add Category
 			</a>
-
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a id="createProductModal" asp-action="CreateProduct" class="btn btn-primary">
+                Add Product
+			</a>
 		</div>
 		<br /><br />
 
@@ -26,15 +29,11 @@
 					<tr>
 						<td>@Html.DisplayFor(modelItem => item.CategoryName)</td>
 						<td>
-							<a id="editCategoryModal" asp-action="EditCategory" asp-route-id="@item.CategoryId" class="btn btn-info">
-								Edit
-							</a>
+							<a id="editCategoryModal" asp-action="EditCategory" asp-route-id="@item.CategoryId" class="btn btn-info">Edit</a>
 
 							<a id="detailsCategorymodel" asp-action="CategoryDetails" asp-route-id="@item.CategoryId" class="btn btn-success">Detail</a>
 
-							<a id="deleteCategoryModal" asp-action="DeleteCategory" asp-route-id="@item.CategoryId" class="btn btn-danger">
-								Delete
-							</a>
+							<a id="deleteCategoryModal" asp-action="DeleteCategory" asp-route-id="@item.CategoryId" class="btn btn-danger">Delete</a>
 						</td>
 
 					</tr>

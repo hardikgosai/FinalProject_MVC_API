@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Models;
 
 namespace Services.Repository
 {
-    internal interface IProductRepository
+    public interface IProductRepository
     {
+        int CreateProduct(Product product);
     }
 }

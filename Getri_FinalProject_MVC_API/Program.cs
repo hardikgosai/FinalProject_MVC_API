@@ -13,7 +13,14 @@ builder.Services.AddDbContext<ApplicationDbContext>
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+builder.Services.AddTransient<IProductRepository, ProductRepository>();
 
+builder.Services.AddSession(Services =>
+{
+    Services.IdleTimeout = TimeSpan.FromDays(2);
+    Services.Cookie.HttpOnly = true;
+    Services.Cookie.IsEssential = true;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -24,9 +31,9 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 
 app.UseRouting();
-
+//app.UseSession();
 app.UseAuthorization();
-
+app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
