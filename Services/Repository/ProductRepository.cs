@@ -17,5 +17,10 @@ namespace Services.Repository
             context.Products.Add(product);
             return context.SaveChanges();
         }
+
+        public IEnumerable<Product> GetProducts()
+        {
+            return context.Products.ToList();
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Getri_FinalProject_MVC_API.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -6,6 +7,7 @@ using Services.Repository;
 
 namespace Getri_FinalProject_MVC_API.Controllers
 {
+    [Authorize]
     public class ProductCategoryController : Controller
     {
         HttpClient _client;
@@ -196,7 +198,7 @@ namespace Getri_FinalProject_MVC_API.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitProducts()
+        public async Task<IActionResult> SubmitProducts()
         {
             if(HttpContext.Session.GetString("lstData") != null)
             {
@@ -226,7 +228,39 @@ namespace Getri_FinalProject_MVC_API.Controllers
                 }
             }
 
-            return RedirectToAction("Index");
+            HttpContext.Session.Remove("lstData");
+
+            ProductsViewModel objProductsViewModel = new ProductsViewModel();
+            objProductsViewModel.ProductCreateViewModel = new ProductCreateViewModel(); ;
+            objProductsViewModel.LstProductCreateViewModel = new List<ProductCreateViewModel>();
+
+            return RedirectToAction("ProductList");
+        }
+
+        public async Task<IActionResult> ProductsList()
+        {
+            List<ProductCreateViewModel> productList = new List<ProductCreateViewModel>();
+            HttpResponseMessage response = await _client.GetAsync("api/Product/GetProductList");
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                productList = JsonConvert.DeserializeObject<List<ProductCreateViewModel>>(result);
+            }
+
+            List<CategoryWithIdViewModel> categoryList = new List<CategoryWithIdViewModel>();
+            HttpResponseMessage responseCategory = await _client.GetAsync("api/Category/GetCategoryList");
+            if (responseCategory.IsSuccessStatusCode)
+            {
+                var result = responseCategory.Content.ReadAsStringAsync().Result;
+                categoryList = JsonConvert.DeserializeObject<List<CategoryWithIdViewModel>>(result);
+            }
+
+            foreach (var product in productList)
+            {
+                product.CategoryName = categoryList.FirstOrDefault(x => x.CategoryId == product.CategoryId).CategoryName;
+            }
+
+            return View(productList);
         }
     }
 }

@@ -26,5 +26,12 @@ namespace Getri_FinalProject_MVC_API.APIController
             var productId = productRepository.CreateProduct(mapper.Map<Product>(productDTO));
             return Ok(productId);                        
         }
+
+        [HttpGet]
+        [Route("GetProductList")]
+        public IActionResult GetProducts()
+        {
+            return Ok(productRepository.GetProducts());
+        }
     }
 }

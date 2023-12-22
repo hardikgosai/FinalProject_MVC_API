@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Services.Repository
 {
-    public interface IUserProfileRepository
+    public interface ILoginRepository
     {
-        UserProfile GetUserProfile(long id);
+        UserLogin AuthenticateUser(string email, string password);
     }
 }

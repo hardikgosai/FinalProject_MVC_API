@@ -6,7 +6,7 @@
 
         public string? ProductDescription { get; set; }
 
-        public decimal? ProductPrice { get; set; }
+        public int? ProductPrice { get; set; }
 
         public int? CategoryId { get; set; }
     }
